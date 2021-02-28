@@ -1,7 +1,7 @@
 ﻿
 namespace TP1_INF1008
 {
-    partial class Form1
+    partial class Labyrinthe
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
