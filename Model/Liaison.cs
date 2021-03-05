@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TP1_INF1008.Model
 {
-    class Liaison : IComparable<Liaison>
+    public partial class Liaison : IComparable<Liaison>
     {
         // Cette Classe permet la Liaison des differents Noeud dans le labyrinthe
         private Noeud nodeDepart;
@@ -88,9 +88,9 @@ namespace TP1_INF1008.Model
 
         public override int GetHashCode()
         {
-            int hash = nodeDepart.PosX() * 31 + nodeArrive.PosY();
-            hash = hash * 31 + nodeArrive.getX();
-            hash = hash * 31 + nodeArrive.getY();
+            int hash = nodeDepart.PosX * 31 + nodeArrive.PosY;
+            hash = hash * 31 + nodeArrive.PosX;
+            hash = hash * 31 + nodeArrive.PosX;
             hash = hash * 31 + poids;
 
             return hash;

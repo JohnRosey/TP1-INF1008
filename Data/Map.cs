@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TP1_INF1008.Data
 {
-    class Map
+    public partial class Map
     {
         /**
         * Compteur d'operation
@@ -16,12 +16,12 @@ namespace TP1_INF1008.Data
         * Données brutes de liaison.
         * - Primière dimenssion :
         * Chaque noeud de gauche à droite puis de haut en bas
-        * - Seconde dimmension :
+        * - Seconde dimension :
         * [0] -> valeur de la liaison vers le voisin de gauche
         * [1] -> valeur de la liaison vers le voisin du bas
         * Valeur indéterminée si aucun
         */
-        private int[][] map;
+        private int[,] map;
 
         /**
         * La longueur (horizontale) de la map.
@@ -51,9 +51,19 @@ namespace TP1_INF1008.Data
             this.longueur = longueur;
             this.largeur = largeur;
             if (longueur <= 0 || largeur <= 0)
-                throw new IllegalArgumentException("La longueur et la largeur de la carte doient être supérieur à zéro.");
+                throw new ArgumentException("La longueur et la largeur de la carte doient être supérieur à zéro.");
 
-            map = new int[longueur * largeur][2];
+            map = new int[longueur * largeur,2];
+        }
+
+        public int GetLongueur
+        {
+            get { return longueur; }
+        }
+
+        public int GetLargeur
+        {
+            get { return largeur; }
         }
 
         /**
@@ -66,40 +76,16 @@ namespace TP1_INF1008.Data
         public void isValideXY(int x, int y)
         {
             if (x < 0)
-                throw new ArgumentException(String.format("La valeur x ne doit pas être inférieure à zéro ! x = %d", x));
+                throw new ArgumentException($"La valeur x ne doit pas être inférieure à zéro ! x = {x}");
             else if (y < 0)
-                throw new ArgumentException(String.format("La valeur y ne doit pas être inférieure à zéro ! y = %d", y));
+                throw new ArgumentException($"La valeur y ne doit pas être inférieure à zéro ! y = {y}");
             else if (x >= longueur)
-                throw new ArgumentException(String.format("La valeur x ne doit pas supérieur ou égale a la longueur ! x = %d", x));
+                throw new ArgumentException($"La valeur x ne doit pas supérieur ou égale a la longueur ! x = {x}");
             else if (y >= largeur)
-                throw new ArgumentException(String.format("La valeur y ne doit pas supérieur ou égale a la largeur ! y  = %d", y));
+                throw new ArgumentException($"La valeur y ne doit pas supérieur ou égale a la largeur ! y  = {y}");
         }
 
-        /**
-             * Cette fonction permet de d'obtenir la valeur de la liaison
-             * {@code versLiaisonDroite} en fonction des coordonées d'une
-             * case de coordonées {@code x} et {@code y}
-             *
-             * @param x                 Coordonnées x (horizontale) de la valeur à prendre.
-             * @param y                 Coordonnées y (verticale) de la valeur à prendre.
-             * @param versLiaisonDroite Vrai si c'est vers la liaison de droite,
-             *                          faux si c'est vers celle du bas.
-             * @return La valeur de la liaison.
-             * @throws IllegalArgumentException Si au moins une des coordonées x ou y est invalide.
-             * @throws IllegalArgumentException Si la case n'a pas de voisin de droite ou
-             *                                  du bas en fonction de {@code versLiaisonDroite}.
-             */
-        public int getValeurLiaison(int x, int y, bool versLiaisonDroite)
-        {
-            isValideXY(x, y);
 
-            if (versLiaisonDroite && !aUnVoisinDeDroite(x, y))
-                throw new ArgumentNullException("Cette case n'a pas de voisin à droite.");
-            if (!versLiaisonDroite && !aUnVoisinDuBas(x, y))
-                throw new ArgumentNullException("Cette case n'a pas de voisin en bas.");
-
-            return map[x + y * longueur][versLiaisonDroite ? 0 : 1];
-        }
 
         /**
      * Retourne vrai si la case de coordonées {@code x} et {@code y}
@@ -116,7 +102,7 @@ namespace TP1_INF1008.Data
             return x < longueur - 1;
         }
 
-        /**
+     /**
      * Retourne vrai si la case de coordonées {@code x} et {@code y}
      * à un voisin du bas.
      *
@@ -139,20 +125,60 @@ namespace TP1_INF1008.Data
      * @param max Maximum des valeurs aléatoires (exclue).
      * @return Retourne cette instance de classe si besoin.
      */
-        public Map metDesValeursAleatoires(int min, int max)
+        public Map PoidsAleatoires(int min, int max)
         {
             // x et y sont des coordonées en niveau du tableau map
             int x, y;
+            Random rand = new Random();
             for (x = 0; x < longueur * largeur; x++)
             {
                 for (y = 0; y < 2; y++)
                 {
-                    map[x][y] = (int)Math.floor((Math.random() * ((max - min) + 1)) + min);
+                    map[x,y] = rand.Next(min, max) + 1;
                     nbOperationMap += 1;
                 }
             }
             return this;
         }
 
+
+        /**
+            * Cette fonction permet de d'obtenir la valeur de la liaison
+            * {@code versLiaisonDroite} en fonction des coordonées d'une
+            * case de coordonées {@code x} et {@code y}
+            *
+            * @param x                 Coordonnées x (horizontale) de la valeur à prendre.
+            * @param y                 Coordonnées y (verticale) de la valeur à prendre.
+            * @param versLiaisonDroite Vrai si c'est vers la liaison de droite,
+            *                          faux si c'est vers celle du bas.
+            * @return La valeur de la liaison.
+            * @throws IllegalArgumentException Si au moins une des coordonées x ou y est invalide.
+            * @throws IllegalArgumentException Si la case n'a pas de voisin de droite ou
+            *                                  du bas en fonction de {@code versLiaisonDroite}.
+        */
+        public int GetPoidsLiaison(int positionX, int positionY, bool toRightDirection)
+        {
+            isValideXY(positionX, positionY);
+
+            // Si on se dirige vers la droite et qu'il n'existe aucune case
+            if (toRightDirection && !aUnVoisinDeDroite(positionX, positionY))
+                throw new ArgumentOutOfRangeException("Cette case n'a pas de voisin de droite.");
+
+            // Si nous sommes à la fin du map
+            if (!toRightDirection && !aUnVoisinDuBas(positionX, positionY))
+                throw new ArgumentOutOfRangeException("Cette case n'a pas de voisin du Bas.");
+
+            return map[positionX + positionY * longueur, toRightDirection ? 0 : 1];
+        }
+
+        public int GetNbreOperation()
+        {
+            return nbOperationMap;
+        }
+
+        public override string ToString()
+        {
+            return $"La map fait une taille de {longueur} X {largeur}";
+        }
     }
 }

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TP1_INF1008.Enum;
-using static TP1_INF1008.Enum.Direction;
+using TP1_INF1008.Data;
 
 namespace TP1_INF1008.Model
 {
-    class Noeud : IComparable<Noeud>
+    public partial class Noeud : IComparable<Noeud>
     {
         private int posX;
         private int posY;
@@ -35,7 +34,7 @@ namespace TP1_INF1008.Model
 
         public override string ToString()
         {
-            return $"({posX},{posY})";
+            return $"(posX: {posX}, posY:{posY})";
         }
 
 
@@ -57,7 +56,7 @@ namespace TP1_INF1008.Model
         {
             if (this.Equals(other))
                 return 0;
-            else if (this.posY < other.posY || 
+            else if (this.posY < other.posY ||
                 (this.posY == other.posY && this.posX < other.posX))
             {
                 return -1;
@@ -68,74 +67,102 @@ namespace TP1_INF1008.Model
 
         public override int GetHashCode()
         {
-            int hash = labyrinthe.hashCode() * 31 + x;
-            hash = hash * 31 + y;
+            int hash = labyrinthe.GetHashCode() * 31 + posX;
+            hash = hash * 31 + posY;
             return hash;
         }
 
+        
+        public enum Direction
+        {
+            HAUT = 0,
+            DROITE = 1,
+            BAS = 2,
+            GAUCHE = 3,
+        }
 
         /**
          * Methode permetant de Vérifier si le voisin existe
-         * @return bool
+         * 
          */
         public void siVoisinExiste(Direction direction)
         {
             switch (direction)
             {
-                case HAUT:
-                    if (y == 0)
+                case Direction.HAUT:
+                    if (posY == 0)
                         throw new ArgumentNullException("Cette case n'a pas de voisin en HAUT");
                     break;
-                case DROITE:
-                    if (x == labyrinthe.getMap().getLongueur() - 1)
+                case Direction.DROITE:
+                    if (posX == labyrinthe.GetMap().GetLongueur - 1)
                         throw new ArgumentNullException("Cette case n'a pas de voisin a DROITE");
                     break;
-                case BAS:
-                    if (y == labyrinthe.getMap().getLargeur() - 1)
+                case Direction.BAS:
+                    if (posY == labyrinthe.GetMap().GetLargeur - 1)
                         throw new ArgumentNullException("Cette case n'a pas de voisin en BAS");
                     break;
-                case GAUCHE:
-                    if (x == 0)
+                case Direction.GAUCHE:
+                    if (posX == 0)
                         throw new ArgumentNullException("Cette case n'a pas de voisin a GAUCHE");
                     break;
             }
         }
 
 
+        /*
+         * Retourne la Liaison entre l'instance est le Noeud voisin 
+         */
         public Liaison getLiaison(Direction direction)
         {
             siVoisinExiste(direction);
             //Map map = labyrinthe.getMap();
 
-            return new Liaison(this, getVoisin(direction), getValeurLiaison(direction));
+            return new Liaison(this, GetNoeudVoisin(direction), GetPoidsLiaison(direction));
         }
 
-        public enum Direction
+
+        /*
+         * Methode qui retourne le poids de la Liaison entre l'instance et le Noeud voisin passée en paramètre
+         */
+        public int GetPoidsLiaison(Direction direction)
         {
-            HAUT = 0,
-            DROITE = 1,
-            BAS = 2,
-            GAUCHE = 3
+            siVoisinExiste(direction);
+            Map map = labyrinthe.GetMap();
+
+            switch (direction)
+            {
+                case Direction.HAUT:
+                    return map.GetPoidsLiaison(posX, posY - 1, false);
+                case Direction.DROITE:
+                    return map.GetPoidsLiaison(posX, posY, true);
+                case Direction.BAS:
+                    return map.GetPoidsLiaison(posX, posY, false);
+                case Direction.GAUCHE:
+                    return map.GetPoidsLiaison(posX - 1, posY, true);
+                default:
+                    throw new ArgumentException("Direction pas correct");
+            }
         }
 
-        public Case getVoisin(Directions direction)
+        /*  Cette Methode retourne un Noeud par rapport à une certaine direction
+         */
+        public Noeud GetNoeudVoisin(Direction direction)
         {
             siVoisinExiste(direction);
 
             switch (direction)
             {
-                case HAUT:
-                    return labyrinthe.getCase(x, y - 1);
-                case DROITE:
-                    return labyrinthe.getCase(x + 1, y);
-                case BAS:
-                    return labyrinthe.getCase(x, y + 1);
-                case GAUCHE:
-                    return labyrinthe.getCase(x - 1, y);
+                case Direction.HAUT:
+                    return labyrinthe.GetNoeud(posX, posY - 1);
+                case Direction.DROITE:
+                    return labyrinthe.GetNoeud(posX + 1, posY);
+                case Direction.BAS:
+                    return labyrinthe.GetNoeud(posX, posY + 1);
+                case Direction.GAUCHE:
+                    return labyrinthe.GetNoeud(posX - 1, posY);
                 default:
-                    throw new IllegalArgumentException("Direction inconnue.");
+                    throw new ArgumentException("Direction inconnue.");
             }
         }
-
     }
 }

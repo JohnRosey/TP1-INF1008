@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Map.cs" />
-    <Compile Include="Enum\Direction.cs" />
     <Compile Include="Labyrinthe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +55,9 @@
     <Compile Include="Model\Noeud.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Labyrinthe.resx">
+      <DependentUpon>Labyrinthe.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

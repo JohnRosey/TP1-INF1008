@@ -16,51 +16,63 @@ namespace TP1_INF1008
     {
 
         private Map map;
-        private HashSet<Liaison> liaisonFinale = null;
+        private static string adresse = "output.txt";
+        //private HashSet<Liaison> liaisonFinale = null;
         private int largeur;
         private int longueur;
+        private static int MIN = 1;
+        private int max;
         public static Labyrinthe UserInterface;
+        private static int nbOperationLabyrinthe;
 
         public Labyrinthe()
         {
             InitializeComponent();
             UserInterface = this;
-            Labyrinthe(15, 15, 1, 5);
-            saveToFile();
+        }
+        
+        /* Methode qui permet d'aller chercher un Noeud sur la Map */
+        public Noeud GetNoeud(int posX, int posY)
+        {
+            map.isValideXY(posX, posY);
+            return new Noeud(this, posX, posY);
         }
 
-        /**
-         * Crée une instance de {@link Labyrinthe} de dimension {@code longueur}
-         * et {@code largeur}.
-         * Les liaisons entre les cases sont générées à partire de valeurs aléatoire
-         * bornées entre {@code min} et {@code max}.
-         *
-         * @param longueur La longueur du nouveau {@link Labyrinthe}.
-         * @param largeur  la largeur du nouveau {@link Labyrinthe}.
-         * @param min      Le minimum des valeurs aléatoires pour les liaison (inclue).
-         * @param max      Le maximum des valeurs aléatoires pour les liaison (exclue).
-         * @throws IllegalArgumentException Si la longeur ou la largeur est inférieure ou égale à zéro.
-         */
-        public Labyrinthe(int longueur, int largeur, int min, int max)
+        public Map GetMap()
         {
-            map = new Map(longueur, largeur);
-            map.metDesValeursAleatoires(min, max);
-            nbOperationLabyrinthe += map.getNbOperationMap();
+           return map; 
         }
 
         /**
          * Sauvegarde sous un format visuel le labyrunthe avec comme mur, les liaisons données.
          */
+        // TODO : Chercher une meilleure methode
         public void saveToFile()
         {
-            // Set a variable to the Documents path.
-            string docPath = Environment.GetFolderPath("C:\\Users\\josue\\Desktop\\GitHub\\TP1-INF1008");
-            // Append text to an existing file named "WriteLines.txt".
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "solution.txt"), true))
-            {
-                outputFile.WriteLine(Liaison.ToString() + "\nelle fonctionne !");
-            }
-            
+            File.WriteAllText(adresse, $"{lbl_infoDimension.Text} \n{lbl_operation.Text}");
         }
+
+
+        private void Labyrinthe_Load(object sender, EventArgs e)
+        {
+           
+        }
+
+        // Lorsqu'on clique sur le Bouton Générer
+        private void btn_generer_Click(object sender, EventArgs e)
+        {
+            // Binding Data with User Interface
+            longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
+            largeur = Convert.ToInt32(txtBox_Largeur.Text.ToString());
+            max = Convert.ToInt32(txtBox_max.Text.ToString());
+            
+            map = new Map(longueur, largeur);
+            map.PoidsAleatoires(MIN, max);
+            nbOperationLabyrinthe += map.GetNbreOperation();
+            lbl_operation.Text = $"Nombre d'opération : {nbOperationLabyrinthe}";
+            lbl_infoDimension.Text = $"information dimension : {map.ToString()}";
+            saveToFile();
+        }
+
     }
 }
