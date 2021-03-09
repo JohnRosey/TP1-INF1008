@@ -74,5 +74,124 @@ namespace TP1_INF1008
             saveToFile();
         }
 
+
+        public override string ToString()
+        {
+            string str = string.Empty;
+
+            // CODE ICI
+            return str;
+        }
+
+
+        /** Fonction assez Générique qui vérifie un élément au coordinnée x et y existe dans le tableau ou pas
+         * return bool
+         */
+        private bool ElementExiste(int x, int y, Object[,] table)
+        {
+            try
+            {
+                return table[y, x] != null; 
+            }
+            catch (Exception)
+            {
+                throw new ArgumentOutOfRangeException($"la valeur {x} et {y} fournis ne sont pas valides");
+            }
+        }
+
+
+        // Représentation des murs
+        private string ProduireDirectionLiaison(bool haut, bool droite, bool bas, bool gauche)
+        {
+            // 1___
+            if (haut) 
+            {
+                return 
+                    droite ?
+                        #region 11__
+                            (bas ?
+
+                                #region 111_
+                                    (gauche ?
+                                        "╬" : // 1111 (Alt + 206)
+                                        "╠" // 1110 (Alt + 204)
+                                    ) :
+                                #endregion
+
+                                #region 110_
+                                    (gauche ?
+                                        "╩" : // 1101 (Alt + 202)
+                                        "╚" // 1100 (Alt + 200)
+                                    ) 
+                                #endregion
+                            ) :
+                        #endregion
+
+                        #region 10__
+                            (bas ?
+
+                                #region 101_
+                                    (gauche ?
+                                        "╣" : // 1011(Alt + 185)
+                                        "║" // 1010(Alt + 186)
+                                    ) :
+                                #endregion
+
+                                #region 100_
+                                    (gauche ?
+                                        "╝" : // 1001 (Alt + 188)
+                                        "║" // 1000 (Alt + 186)
+                                    ) 
+                                #endregion
+
+                            ); 
+                        #endregion
+            }
+            else
+            {
+                return
+                    droite ?
+                        #region 01__
+                            (bas ?
+
+                                #region 011_
+                                    (gauche ?
+                                        "╦" : // 0111 (Alt + 203)
+                                        "╔" // 0110 (Alt + 201)
+                                    ) :
+                                #endregion
+
+                                #region 010_
+                                    (gauche ?
+                                        "═" : // 0101 (Alt + 205)
+                                        "═" // 0100 (Alt + 205) //TODO : doute
+                                    )
+                                #endregion
+                            ) :
+                        #endregion
+
+                        #region 00__
+                            (bas ?
+
+                                #region 001_
+                                    (gauche ?
+                                        "╗" : // 0011(Alt + 187)
+                                        "║" // 0010(Alt + 186)
+                                    ) :
+                                #endregion
+
+                                #region 000_
+                                    (gauche ?
+                                        "═" : // 0001 (Alt + 205)
+                                        "?" // Impossible
+                                    )
+                                #endregion
+
+                            );
+                        #endregion
+            }
+        }
+
+
     }
 }
