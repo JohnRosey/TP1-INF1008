@@ -96,6 +96,38 @@ namespace TP1_INF1008.Model
             return hash;
         }
 
+        /**
+        * Retourne la coordonnée x de la liaison si elle était plassée dans une grille.
+        * Exemple: Si cette {@link Liaison} relie deux {@link Case} (0,0) et (1,0).
+        * Elle aurait les coordonées (2,0).
+        * case - liaison - case
+        *
+        * Par rapport aux {@link Case} avec des coordonées côte à côte,
+        * ici elle on leurs coordonées multipliées par deux.
+        *
+        * @return La coordonée x de la liaison.
+        */
+        public int GetCoordX()
+        {
+            return NodeDepart.PosX*2 + (NodeArrive.PosX - NodeDepart.PosX);
+        }
+
+        /**
+         * Retourne la coordonnée y de la liaison si elle était plassée dans une grille.
+         * Exemple: Si cette {@link Liaison} relie deux {@link Case} (0,0) et (1,0).
+         * Elle aurai les coordonées (2,0).
+         * case - liaison - case
+         *
+         * Par rapport aux {@link Case} avec des coordonées côte à côte,
+         * ici elle on leurs coordonées multipliées par deux.
+         *
+         * @return La coordonée y de la liaison.
+         */
+        public int getCoordY()
+        {
+            return NodeDepart.PosY * 2 + (NodeArrive.PosY - NodeDepart.PosY);
+        }
+
         public override string ToString()
         {
             return $"NodeDepart: {nodeDepart}, NodeArrive: {NodeArrive}, Poids: {poids}";
