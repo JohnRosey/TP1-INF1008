@@ -24,13 +24,14 @@ namespace TP1_INF1008
         private int max;
         public static Labyrinthe UserInterface;
         private static int nbOperationLabyrinthe;
+        private HashSet<Liaison> liaisonsFinales = null;
 
         public Labyrinthe()
         {
             InitializeComponent();
             UserInterface = this;
         }
-        
+
         /* Methode qui permet d'aller chercher un Noeud sur la Map */
         public Noeud GetNoeud(int posX, int posY)
         {
@@ -40,7 +41,7 @@ namespace TP1_INF1008
 
         public Map GetMap()
         {
-           return map; 
+            return map;
         }
 
         /**
@@ -49,13 +50,14 @@ namespace TP1_INF1008
         // TODO : Chercher une meilleure methode
         public void saveToFile()
         {
-            File.WriteAllText(adresse, $"{lbl_infoDimension.Text} \n{lbl_operation.Text}");
+            File.WriteAllText(adresse, $"{lbl_infoDimension.Text} \n{lbl_operation.Text}\n\t\tLabyrinthe" +
+                $"\n{this.ToString()}");
         }
 
 
         private void Labyrinthe_Load(object sender, EventArgs e)
         {
-           
+
         }
 
         // Lorsqu'on clique sur le Bouton Générer
@@ -65,33 +67,97 @@ namespace TP1_INF1008
             longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
             largeur = Convert.ToInt32(txtBox_Largeur.Text.ToString());
             max = Convert.ToInt32(txtBox_max.Text.ToString());
-            
+
             map = new Map(longueur, largeur);
             map.PoidsAleatoires(MIN, max);
             nbOperationLabyrinthe += map.GetNbreOperation();
             lbl_operation.Text = $"Nombre d'opération : {nbOperationLabyrinthe}";
             lbl_infoDimension.Text = $"information dimension : {map.ToString()}";
             saveToFile();
+            
         }
 
 
         public override string ToString()
         {
-            string str = string.Empty;
+            // Vérifier si la methode de prim a déjà été executée au préalable
+            if (liaisonsFinales == null)
+            {
+                Console.WriteLine("Commencer par Lancer l'algorithme de PRIM !");
+                MessageBox.Show("Commencer par Lancer l'algorithme de PRIM !");
+                return null;
+            }
+                
 
-            // CODE ICI
-            return str;
+            StringBuilder str = new StringBuilder();
+
+            Liaison[][] ecran = new Liaison[GetMap().GetLargeur * 2 - 1][];
+            for (int y = 0; y < (GetMap().GetLargeur * 2) - 1; y++)
+            {
+                ecran[y] = new Liaison[GetMap().GetLongueur * 2 - 1];
+            }
+
+            // parcourir les liaisons pour les ajouter dans le Tableau
+            Liaison tmp;
+            foreach (Liaison item in liaisonsFinales)
+            {
+                tmp = item;
+                int tmp_y = tmp.getCoordY();
+                int tmp_x = tmp.GetCoordX();
+                ecran[tmp_y][tmp_x] = tmp;
+            }
+
+            for (int y = 0; y < GetMap().GetLongueur * 2 - 1; y++)
+            {
+                for (int x = 0; x < GetMap().GetLargeur * 2 - 1; x++)
+                {
+
+                    if (x % 2 == 0 && y % 2 == 0)
+                    {
+                        str.Append(ProduireDirectionLiaison(
+                            ElementExiste(x, y - 1, ecran),
+                            ElementExiste(x + 1, y, ecran),
+                            ElementExiste(x, y + 1, ecran),
+                            ElementExiste(x - 1, y, ecran)
+                            ));
+                    }
+                    else if(x % 2 == 1 && y % 2 == 0)
+                    {
+                        // liaison Horizontale
+                        if (ElementExiste(x, y, ecran))
+                            str.Append("═"); // Alt + 205
+                        else
+                            str.Append(" ");
+                    }
+                    else if (x % 2 == 0)
+                    {
+                        // Liaison verticale
+                        if (ElementExiste(x, y, ecran))
+                            str.Append("║"); // Alt + 186
+                        else
+                            str.Append(" ");
+                    }
+                    else
+                    {
+                        str.Append(" ");
+                    }
+                    str.Append(" ");
+                }
+                str.Append("\n");
+            }
+
+            return str.ToString();
         }
 
 
         /** Fonction assez Générique qui vérifie un élément au coordinnée x et y existe dans le tableau ou pas
          * return bool
          */
-        private bool ElementExiste(int x, int y, Object[,] table)
+        private bool ElementExiste(int x, int y, Object[][] table)
         {
             try
             {
-                return table[y, x] != null; 
+                return table[y][x] != null; 
             }
             catch (Exception)
             {
