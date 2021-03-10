@@ -137,7 +137,6 @@ namespace TP1_INF1008
             this.Controls.Add(this.lbl_infoDimension);
             this.Name = "Labyrinthe";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Labyrinthe_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

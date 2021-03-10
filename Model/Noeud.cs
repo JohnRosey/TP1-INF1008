@@ -81,6 +81,14 @@ namespace TP1_INF1008.Model
             GAUCHE = 3,
         }
 
+        public static class EnumDirection
+        {
+            public static IEnumerable<Direction> GetValues<Direction>()
+            {
+                return Enum.GetValues(typeof(Direction)).Cast<Direction>();
+            }
+        }
+
         /**
          * Methode permetant de Vérifier si le voisin existe
          * 
