@@ -1,8 +1,6 @@
 # TP1-INF1008
 
 # TODO's
-* Affichage - Methode ToString()
-* Algorithme de Prim
 * UI (Pen)
 * Menu
   - Generer le Labyrinthe : 
