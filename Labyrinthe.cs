@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using TP1_INF1008.Data;
 using TP1_INF1008.Model;
+using static TP1_INF1008.Model.Noeud;
 
 namespace TP1_INF1008
 {
@@ -16,11 +14,12 @@ namespace TP1_INF1008
     {
 
         private Map map;
-        private static string adresse = "output.txt";
+        private static readonly string adresseLabyrinthe = "..\\..\\LabyrintheDessin.txt";
+        private static readonly string adresseCalcul = "..\\..\\LabyrintheCalcul.txt";
         //private HashSet<Liaison> liaisonFinale = null;
         private int largeur;
         private int longueur;
-        private static int MIN = 1;
+        private static readonly int MIN = 1;
         private int max;
         public static Labyrinthe UserInterface;
         private static int nbOperationLabyrinthe;
@@ -50,15 +49,17 @@ namespace TP1_INF1008
         // TODO : Chercher une meilleure methode
         public void saveToFile()
         {
-            File.WriteAllText(adresse, $"{lbl_infoDimension.Text} \n{lbl_operation.Text}\n\t\tLabyrinthe" +
-                $"\n{this.ToString()}");
+            // Écrire dans le fichier "LabyrintheDessin.txt"
+            File.WriteAllText(adresseLabyrinthe,
+                $"\n\t\tLabyrinthe\n\t\t----------\n" +
+                $"\n{AffichageLabyrinthe()}");
+
+            // Écrire dans le fichier "LabyrintheCalcul.txt"
+            File.WriteAllText(adresseCalcul, 
+                $"{lbl_infoDimension.Text}" +
+                $"\n{lbl_operation.Text}");
         }
 
-
-        private void Labyrinthe_Load(object sender, EventArgs e)
-        {
-
-        }
 
         // Lorsqu'on clique sur le Bouton Générer
         private void btn_generer_Click(object sender, EventArgs e)
@@ -67,23 +68,112 @@ namespace TP1_INF1008
             longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
             largeur = Convert.ToInt32(txtBox_Largeur.Text.ToString());
             max = Convert.ToInt32(txtBox_max.Text.ToString());
-
             map = new Map(longueur, largeur);
             map.PoidsAleatoires(MIN, max);
             nbOperationLabyrinthe += map.GetNbreOperation();
             lbl_operation.Text = $"Nombre d'opération : {nbOperationLabyrinthe}";
-            lbl_infoDimension.Text = $"information dimension : {map.ToString()}";
-            saveToFile();
+            lbl_infoDimension.Text = $"information dimension : {map}";
             
+            // execution de l'algorithme de Prim
+            Prim();
+
+            // puis Affichage à la console
+            Console.WriteLine(AffichageLabyrinthe());
+
+            // Enregistrement du Labyrinthe produit au fichier .txt
+            saveToFile();
         }
 
 
-        public override string ToString()
+        /**
+         * La Methode de Prim
+         */
+        public HashSet<Liaison> Prim()
+        {
+            nbOperationLabyrinthe = 0;
+
+            HashSet<Liaison> liaisionDechues = new HashSet<Liaison>();
+            HashSet<Liaison> liaisonPossible = new HashSet<Liaison>();
+            liaisonsFinales = new HashSet<Liaison>();
+            HashSet<Noeud> noeudFinale = new HashSet<Noeud>();
+
+            Noeud noeudToAdd = GetNoeud(0, 0);
+
+            // Tant que le nombre cases possibles est inferieur à la surface du map
+            while (noeudFinale.Count < GetMap().GetLargeur * GetMap().GetLongueur)
+            {
+                noeudFinale.Add(noeudToAdd);
+
+                // on ajoute les voisins de la case ajouté dans les liaisons possible
+                var values = EnumDirection.GetValues<Direction>();
+
+                Liaison liaisonTempo;
+                foreach (Direction direction in values)
+                {
+                    // try si le noeud n'a pas de voisin dans la direction donnée
+                    try
+                    {
+                        liaisonTempo = noeudToAdd.getLiaison(direction);
+
+                        // si la liaison est déjà présente dans les liaisons possibles
+                        if (liaisonPossible.Contains(liaisonTempo))
+                        {
+                            // on supprime la liaison des liaisons possibles
+                            // et on l'ajoute dans les liaisons rejété
+                            // (car elle connecte deux Case déjà solution)
+                            liaisonPossible.Remove(liaisonTempo);
+                            liaisionDechues.Add(liaisonTempo);
+                            // TODO : debug pour send Event
+                        }
+                        else if (!liaisionDechues.Contains(liaisonTempo) && !liaisonsFinales.Contains(liaisonTempo))
+                        {
+                            // on l'ajoute dans les liaisons possibles
+                            liaisonPossible.Add(liaisonTempo);
+                            // on notifie le UI nouvelle liaison possible
+                            // TODO : debug pour send Event
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+                        // pass
+                    }
+
+                    nbOperationLabyrinthe += 1;
+                }
+
+                
+                // S'il y a encore des liaisons possibles
+                if (liaisonPossible.Count != 0)
+                {
+                    // Recherche la prochaine liaison potentielle
+                    //liaisonTempo = liaisonPossible.OrderBy(x => this.CompareTo(x));
+                    liaisonTempo = liaisonPossible.Min();
+
+                    // on prend le noeud pas encore dans la solution
+                    if (!noeudFinale.Contains(liaisonTempo.NodeDepart))
+                        noeudToAdd = liaisonTempo.NodeDepart;
+                    else
+                        noeudToAdd = liaisonTempo.NodeArrive;
+
+                    // on transfère la liaison de Possible à Solution Finale
+                    liaisonPossible.Remove(liaisonTempo);
+                    liaisonsFinales.Add(liaisonTempo);
+
+                    // on notifie le UI nouvelle liaison solution
+                    // TODO : sendEvent(liaisonTmp, 1);
+                }
+            }
+
+            return liaisonsFinales;
+        }
+
+
+        public string AffichageLabyrinthe()
         {
             // Vérifier si la methode de prim a déjà été executée au préalable
             if (liaisonsFinales == null)
             {
-                Console.WriteLine("Commencer par Lancer l'algorithme de PRIM !");
                 MessageBox.Show("Commencer par Lancer l'algorithme de PRIM !");
                 return null;
             }
@@ -161,8 +251,9 @@ namespace TP1_INF1008
             }
             catch (Exception)
             {
-                throw new ArgumentOutOfRangeException($"la valeur {x} et {y} fournis ne sont pas valides");
+                // on l'ignore
             }
+            return false;
         }
 
 
@@ -257,7 +348,6 @@ namespace TP1_INF1008
                         #endregion
             }
         }
-
 
     }
 }

@@ -1,0 +1,2 @@
+information dimension : La map fait une taille de 10 X 10
+Nombre d'opération : 200
