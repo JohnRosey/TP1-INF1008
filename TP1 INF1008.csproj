@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Choix.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Choix.Designer.cs">
+      <DependentUpon>Choix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Map.cs" />
     <Compile Include="Labyrinthe.cs">
       <SubType>Form</SubType>
@@ -58,6 +64,9 @@
     <Compile Include="Model\Noeud.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Choix.resx">
+      <DependentUpon>Choix.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Labyrinthe.resx">
       <DependentUpon>Labyrinthe.cs</DependentUpon>
     </EmbeddedResource>
