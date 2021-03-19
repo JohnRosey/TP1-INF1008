@@ -15,8 +15,11 @@ namespace TP1_INF1008
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Labyrinthe());
-
+            Application.Run(new Choix());
+           
         }
-    }
+       
+            
+        }
+    
 }
