@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+/* Program.cs  *********************************************************************************************
+ **********     @Authors :                                             Date : 01 Avril 2020       **********
+ **********                 * Josue Lubaki                                                        **********
+ **********                 * Ismael Gansonre                                                     **********
+ **********                 * Jordan Kuibia                                                       **********
+ **********                 * Jonathan Kanyinda                                                   **********
+ ***********************************************************************************************************/
+
 namespace TP1_INF1008
 {
     static class Program

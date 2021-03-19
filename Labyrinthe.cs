@@ -8,6 +8,14 @@ using TP1_INF1008.Data;
 using TP1_INF1008.Model;
 using static TP1_INF1008.Model.Noeud;
 
+/* Labyrinthe.cs  ******************************************************************************************
+ **********     @Authors :                                             Date : 01 Avril 2020       **********
+ **********                 * Josue Lubaki                                                        **********
+ **********                 * Ismael Gansonre                                                     **********
+ **********                 * Jordan Kuibia                                                       **********
+ **********                 * Jonathan Kanyinda                                                   **********
+ ***********************************************************************************************************/
+
 namespace TP1_INF1008
 {
     public partial class Labyrinthe : Form
@@ -16,7 +24,7 @@ namespace TP1_INF1008
         private Map map;
         private static readonly string adresseLabyrinthe = "..\\..\\LabyrintheDessin.txt";
         private static readonly string adresseCalcul = "..\\..\\LabyrintheCalcul.txt";
-        //private HashSet<Liaison> liaisonFinale = null;
+        private HashSet<Liaison> liaisonFinale = null;
         private int largeur;
         private int longueur;
         private static readonly int MIN = 1;
@@ -38,9 +46,14 @@ namespace TP1_INF1008
             return new Noeud(this, posX, posY);
         }
 
+
         public Map GetMap()
         {
             return map;
+        }
+
+        public void SetMap(Map newMap){
+            this.map = newMap}     
         }
 
         /**
@@ -65,19 +78,19 @@ namespace TP1_INF1008
         private void btn_generer_Click(object sender, EventArgs e)
         {
             // Binding Data with User Interface
-          /*  longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
+            /*longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
             largeur = Convert.ToInt32(txtBox_Largeur.Text.ToString());
             max = Convert.ToInt32(txtBox_max.Text.ToString());*/
         
             
 
             // puis Affichage à la console
-            Console.WriteLine(AffichageLabyrinthe());  
+            //Console.WriteLine(AffichageLabyrinthe());  
 
             //********************* MENU ********************//
             bool conti = true;
             int menu;
-            while (conti  )
+            while (conti)
             {
                 Console.WriteLine("===================================================");
                 Console.WriteLine("SAISIR VOTRE CHOIX ");
@@ -97,12 +110,12 @@ namespace TP1_INF1008
                         Console.WriteLine("1.===  Generer le Labyrinthe ");
 
                         Console.WriteLine(" Entrer longeur");
-                        longueur = Convert.ToInt32(Console.ReadLine());
+                        longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
 
                         Console.WriteLine(" Entrer largeur");
-                        largeur = Convert.ToInt32(Console.ReadLine());
+                         largeur = Convert.ToInt32(txtBox_Largeur.Text.ToString());
                         Console.WriteLine(" Entrer max");
-                        max = Convert.ToInt32(Console.ReadLine());
+                        max = Convert.ToInt32(txtBox_max.Text.ToString());
                         map = new Map(longueur, largeur);
                         map.PoidsAleatoires(MIN, max);
 
@@ -121,6 +134,7 @@ namespace TP1_INF1008
                     case 3:
                         Console.WriteLine("3.Afficher à la Console le Labyrinthe");
                         //statement 
+                        Console.WriteLine(AffichageLabyrinthe());  
                         break;
 
                     case 4:
@@ -184,7 +198,7 @@ namespace TP1_INF1008
 
 
             // Enregistrement du Labyrinthe produit au fichier .txt
-          //**  saveToFile();
+          saveToFile();
         }
 
 
