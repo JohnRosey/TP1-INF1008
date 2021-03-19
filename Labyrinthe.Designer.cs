@@ -88,9 +88,9 @@ namespace TP1_INF1008
             this.btn_generer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_generer.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_generer.ForeColor = System.Drawing.Color.White;
-            this.btn_generer.Location = new System.Drawing.Point(361, 404);
+            this.btn_generer.Location = new System.Drawing.Point(334, 403);
             this.btn_generer.Name = "btn_generer";
-            this.btn_generer.Size = new System.Drawing.Size(75, 23);
+            this.btn_generer.Size = new System.Drawing.Size(102, 36);
             this.btn_generer.TabIndex = 5;
             this.btn_generer.Text = "Générer";
             this.btn_generer.UseVisualStyleBackColor = false;
@@ -125,7 +125,7 @@ namespace TP1_INF1008
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 461);
             this.Controls.Add(this.txtBox_max);
             this.Controls.Add(this.lbl_max);
             this.Controls.Add(this.lbl_operation);

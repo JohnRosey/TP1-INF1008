@@ -1,2 +1,2 @@
-information dimension : La map fait une taille de 4 X 4
-Nombre d'opération : 32
+information dimension : La map fait une taille de 35 X 35
+Nombre d'opération : 2450
