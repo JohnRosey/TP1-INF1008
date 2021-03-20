@@ -21,13 +21,13 @@ namespace TP1_INF1008
         [STAThread]
         static void Main()
         {
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Choix());
            
         }
        
-            
-        }
+    }
     
 }

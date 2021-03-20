@@ -10,7 +10,15 @@ using System.Text;
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
  ***********************************************************************************************************/
-
+/*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+ * Liaison.cs
+ * ==========
+ *      Cette Classe permet de determiner avec exactitude la Liaison entre different Noeud(Case), elle
+ *      redefinie la methode Equals pour determiner le moment où on considère deux Liaisons comme étant 
+ *      identiques. Puis redefinie la Methode CompareTo de l'interface Comparable pour trier en ordre
+ *      croissant les Noeud et Liaison générées (aléatoirement).
+ *      
+ *░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*/
 namespace TP1_INF1008.Model
 {
     public partial class Liaison : IComparable<Liaison>

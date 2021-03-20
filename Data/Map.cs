@@ -10,6 +10,13 @@ using System.Text;
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
  ***********************************************************************************************************/
+/*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+ * Map.cs
+ * ======
+ *      Cette Classe permet de defini la Base sur laquelle on placera le Noeud et liaison formé.
+ *      D'où (Noeud + Liaison + Map) = Labyrinthe
+ *      
+ *░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*/
 namespace TP1_INF1008.Data
 {
     public partial class Map
@@ -54,7 +61,6 @@ namespace TP1_INF1008.Data
          */
         public Map(int longueur, int largeur)
         {
-            //nbOperationMap = 0;
             this.longueur = longueur;
             this.largeur = largeur;
             if (longueur <= 0 || largeur <= 0)

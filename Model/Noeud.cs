@@ -10,7 +10,15 @@ using TP1_INF1008.Data;
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
  ***********************************************************************************************************/
-
+/*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+ * Noeud.cs
+ * ========
+ *      Cette Classe represente les Cases dans notre Labyrinthe, cette classe contient également toutes les
+ *      Vérifications possibles pour determiner si la case existe dans le dimension du Labyrinthe donné par
+ *      L'Utilisateur ou pas, ainsi que si la case voisine existe dependament d'une direction. Elle redefinie
+ *      La methode Equals pour determiner quand est-ce le Noeud (Case) sont égales.
+ *      
+ *░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*/
 namespace TP1_INF1008.Model
 {
     public partial class Noeud : IComparable<Noeud>
@@ -45,7 +53,9 @@ namespace TP1_INF1008.Model
         }
 
 
-        // Case égale
+        /**
+         * Redefinition de la methode Equals pour determiner quand est-ce le noeud sont égales
+         */
         public override bool Equals(object obj)
         {
             // Vérifier si l'objet est une Case (instanceof Noeud)
@@ -79,7 +89,9 @@ namespace TP1_INF1008.Model
             return hash;
         }
 
-        
+        /**
+         * Enumeration represenatant les directions du labyrinthe
+         */
         public enum Direction
         {
             HAUT = 0,
@@ -98,7 +110,7 @@ namespace TP1_INF1008.Model
 
         /**
          * Methode permetant de Vérifier si le voisin existe
-         * 
+         * @throw ArgumentNullException : Lorsque la case recherchée à une certaine direction n'est pas n'existe pas
          */
         public void siVoisinExiste(Direction direction)
         {
@@ -124,8 +136,9 @@ namespace TP1_INF1008.Model
         }
 
 
-        /*
+        /**
          * Retourne la Liaison entre l'instance est le Noeud voisin 
+         * @return Liaison
          */
         public Liaison getLiaison(Direction direction)
         {
@@ -136,8 +149,9 @@ namespace TP1_INF1008.Model
         }
 
 
-        /*
+        /**
          * Methode qui retourne le poids de la Liaison entre l'instance et le Noeud voisin passée en paramètre
+         * @return int
          */
         public int GetPoidsLiaison(Direction direction)
         {
@@ -159,7 +173,9 @@ namespace TP1_INF1008.Model
             }
         }
 
-        /*  Cette Methode retourne un Noeud par rapport à une certaine direction
+        /**
+         *  Cette Methode retourne un Noeud par rapport à une certaine direction
+         *  return Noeud
          */
         public Noeud GetNoeudVoisin(Direction direction)
         {

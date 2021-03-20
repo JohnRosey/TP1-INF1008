@@ -15,6 +15,14 @@ using static TP1_INF1008.Model.Noeud;
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
  ***********************************************************************************************************/
+/*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+ * Labyrinthe.cs
+ * =============
+ *      Cette Classe permet de d'instancier la map en la donnant les valeurs (Poids) aléatoires, afin de 
+ *      générer un Labyrinthe, ensuite demarre la fonction de Prim pour trouver le chemin le plus court.
+ *      et enfin, il sauvegarde les resultats des opérations dans lae fichier .txt destinés
+ *      
+ *░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*/
 
 namespace TP1_INF1008
 {
@@ -24,7 +32,6 @@ namespace TP1_INF1008
         private Map map;
         private static readonly string adresseLabyrinthe = "..\\..\\LabyrintheDessin.txt";
         private static readonly string adresseCalcul = "..\\..\\LabyrintheCalcul.txt";
-        private HashSet<Liaison> liaisonFinale = null;
         private int largeur;
         private int longueur;
         private static readonly int MIN = 1;
@@ -38,12 +45,7 @@ namespace TP1_INF1008
             InitializeComponent();
             UserInterface = this;
         }
-        public void   SetMap(Map newMap)
-        {
-            this.map = newMap;
-
-        }
-    
+       
 
     /* Methode qui permet d'aller chercher un Noeud sur la Map */
     public Noeud GetNoeud(int posX, int posY)
@@ -58,14 +60,13 @@ namespace TP1_INF1008
             return map;
         }
 
-        public void SetMap(Map newMap){
-            this.map = newMap}     
+         public void   SetMap(Map newMap){
+            this.map = newMap;
         }
-
+    
         /**
          * Sauvegarde sous un format visuel le labyrunthe avec comme mur, les liaisons données.
          */
-        // TODO : Chercher une meilleure methode
         public void saveToFile()
         {
             // Écrire dans le fichier "LabyrintheDessin.txt"
@@ -83,26 +84,33 @@ namespace TP1_INF1008
         // Lorsqu'on clique sur le Bouton Générer
         private void btn_generer_Click(object sender, EventArgs e)
         {
-            // Binding Data with User Interface
-            /*longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
+
+            // Recuperation des informations necéssaires pour le Labyrinthe à générer
+            longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
             Console.WriteLine(" Voici le  Labyrinthe  generer avec PRIM:");
             longueur = Convert.ToInt32(txtBox_Longueur.Text.ToString());
-
             largeur = Convert.ToInt32(txtBox_Largeur.Text.ToString());
-          
             max = Convert.ToInt32(txtBox_max.Text.ToString());
+
+            // initialisation map
             map = new Map(longueur, largeur);
+
+            // Affectaction des poids aléatoires
             map.PoidsAleatoires(MIN, max);
             nbOperationLabyrinthe += map.GetNbreOperation();
+
+            // Lancement de la methode de Prim()
+            Prim();
+
+            // informations de calcul
             lbl_operation.Text = $"Nombre d'opération : {nbOperationLabyrinthe}";
             lbl_infoDimension.Text = $"information dimension : {map}";
-            Prim();
+
+            // Affichage de resultat sur la console
             Console.WriteLine(AffichageLabyrinthe());
-            saveToFile();
 
-            // puis Affichage à la console
-
-            
+            // Enregistrement des resultats (labyrinthe et calcul sur les fichiers destinés)
+            saveToFile();            
         }
 
 
@@ -144,14 +152,11 @@ namespace TP1_INF1008
                             // (car elle connecte deux Case déjà solution)
                             liaisonPossible.Remove(liaisonTempo);
                             liaisionDechues.Add(liaisonTempo);
-                            // TODO : debug pour send Event
                         }
                         else if (!liaisionDechues.Contains(liaisonTempo) && !liaisonsFinales.Contains(liaisonTempo))
                         {
                             // on l'ajoute dans les liaisons possibles
                             liaisonPossible.Add(liaisonTempo);
-                            // on notifie le UI nouvelle liaison possible
-                            // TODO : debug pour send Event
                         }
 
                     }
@@ -180,9 +185,6 @@ namespace TP1_INF1008
                     // on transfère la liaison de Possible à Solution Finale
                     liaisonPossible.Remove(liaisonTempo);
                     liaisonsFinales.Add(liaisonTempo);
-
-                    // on notifie le UI nouvelle liaison solution
-                    // TODO : sendEvent(liaisonTmp, 1);
                 }
             }
 
@@ -361,7 +363,7 @@ namespace TP1_INF1008
                                 #region 000_
                                     (gauche ?
                                         "═" : // 0001 (Alt + 205)
-                                        "?" // Impossible
+                                        " " // Impossible
                                     )
                                 #endregion
 
@@ -370,5 +372,9 @@ namespace TP1_INF1008
             }
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
