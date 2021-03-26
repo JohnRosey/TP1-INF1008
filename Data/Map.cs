@@ -9,6 +9,7 @@ using System.Text;
  **********                 * Ismael Gansonre                                                     **********
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
+ **********                 * Edgard Koffi                                                        **********
  ***********************************************************************************************************/
 /*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
  * Map.cs
@@ -140,6 +141,7 @@ namespace TP1_INF1008.Data
      */
         public Map PoidsAleatoires(int min, int max)
         {
+            nbOperationMap = 0;
             // x et y sont des coordonées en niveau du tableau map
             int x, y;
             Random rand = new Random();

@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using TP1_INF1008.Data;
 using TP1_INF1008.Model;
 using static TP1_INF1008.Model.Noeud;
+using static TP1_INF1008.Utils.Utils;
+
 
 /* Labyrinthe.cs  ******************************************************************************************
  **********     @Authors :                                             Date : 01 Avril 2020       **********
@@ -14,6 +16,7 @@ using static TP1_INF1008.Model.Noeud;
  **********                 * Ismael Gansonre                                                     **********
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
+ **********                 * Edgard Koffi                                                        ********** 
  ***********************************************************************************************************/
 /*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
  * Labyrinthe.cs
@@ -67,7 +70,7 @@ namespace TP1_INF1008
         /**
          * Sauvegarde sous un format visuel le labyrunthe avec comme mur, les liaisons données.
          */
-        public void saveToFile()
+        public void SaveToFile()
         {
             // Écrire dans le fichier "LabyrintheDessin.txt"
             File.WriteAllText(adresseLabyrinthe,
@@ -76,8 +79,7 @@ namespace TP1_INF1008
 
             // Écrire dans le fichier "LabyrintheCalcul.txt"
             File.WriteAllText(adresseCalcul, 
-                $"{lbl_infoDimension.Text}" +
-                $"\n{lbl_operation.Text}");
+                $"{lbl_infoDimension.Text}\n{lbl_operation_init.Text}\n{lbl_operation_prim.Text}\n{lbl_operation_total.Text}");
         }
 
 
@@ -97,20 +99,22 @@ namespace TP1_INF1008
 
             // Affectaction des poids aléatoires
             map.PoidsAleatoires(MIN, max);
-            nbOperationLabyrinthe += map.GetNbreOperation();
+            int nbOperationInitialisation = map.GetNbreOperation();
 
             // Lancement de la methode de Prim()
             Prim();
 
             // informations de calcul
-            lbl_operation.Text = $"Nombre d'opération : {nbOperationLabyrinthe}";
+            lbl_operation_init.Text = $"Nombre d'opération Initialisation : {nbOperationInitialisation}";
+            lbl_operation_prim.Text = $"Nombre d'opération Prim : {nbOperationLabyrinthe}";
+            lbl_operation_total.Text = $"Nombre d'opération Total : {nbOperationLabyrinthe + nbOperationInitialisation}";
             lbl_infoDimension.Text = $"information dimension : {map}";
 
             // Affichage de resultat sur la console
             Console.WriteLine(AffichageLabyrinthe());
 
             // Enregistrement des resultats (labyrinthe et calcul sur les fichiers destinés)
-            saveToFile();            
+            SaveToFile();            
         }
 
 
@@ -224,7 +228,12 @@ namespace TP1_INF1008
                 for (int x = 0; x < GetMap().GetLongueur * 2 - 1; x++)
                 {
 
-                    if (x % 2 == 0 && y % 2 == 0)
+                    // Si c'est le Premier élément
+                    if (x == 0 && y == 0)
+                        str.Append("E");
+                    else if (x == GetMap().GetLongueur * 2 - 2 && y == GetMap().GetLargeur * 2 - 2)
+                        str.Append("S");
+                    else if (x % 2 == 0 && y % 2 == 0)
                     {
                         str.Append(ProduireDirectionLiaison(
                             ElementExiste(x, y - 1, ecran),
@@ -233,13 +242,13 @@ namespace TP1_INF1008
                             ElementExiste(x - 1, y, ecran)
                             ));
                     }
-                    else if(x % 2 == 1 && y % 2 == 0)
+                    else if (x % 2 == 1 && y % 2 == 0)
                     {
                         // liaison Horizontale
                         if (ElementExiste(x, y, ecran))
                             str.Append("═"); // Alt + 205
                         else
-                            str.Append(" ");
+                            str.Append("■");
                     }
                     else if (x % 2 == 0)
                     {
@@ -247,11 +256,11 @@ namespace TP1_INF1008
                         if (ElementExiste(x, y, ecran))
                             str.Append("║"); // Alt + 186
                         else
-                            str.Append(" ");
+                            str.Append("■");
                     }
                     else
                     {
-                        str.Append(" ");
+                        str.Append("■");
                     }
                     str.Append(" ");
                 }
@@ -375,5 +384,18 @@ namespace TP1_INF1008
         {
             Application.Exit();
         }
+
+        private void PannelDraggable_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            DragMe(Handle);
+        }
+
+        public int GetNbreOperationPrim()
+        {
+            return nbOperationLabyrinthe;
+        }
+
     }
+
+
 }

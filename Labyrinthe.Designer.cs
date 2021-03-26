@@ -29,18 +29,19 @@ namespace TP1_INF1008
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Labyrinthe));
             this.lbl_infoDimension = new System.Windows.Forms.Label();
             this.lbl_longueur = new System.Windows.Forms.Label();
             this.lbl_largeur = new System.Windows.Forms.Label();
             this.txtBox_Longueur = new System.Windows.Forms.TextBox();
             this.txtBox_Largeur = new System.Windows.Forms.TextBox();
             this.btn_generer = new System.Windows.Forms.Button();
-            this.lbl_operation = new System.Windows.Forms.Label();
+            this.lbl_operation_init = new System.Windows.Forms.Label();
             this.lbl_max = new System.Windows.Forms.Label();
             this.txtBox_max = new System.Windows.Forms.TextBox();
-            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.label1 = new System.Windows.Forms.Label();
+            this.panelDraggable = new System.Windows.Forms.Panel();
+            this.lbl_operation_prim = new System.Windows.Forms.Label();
+            this.lbl_operation_total = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbl_infoDimension
@@ -104,15 +105,15 @@ namespace TP1_INF1008
             this.btn_generer.UseVisualStyleBackColor = false;
             this.btn_generer.Click += new System.EventHandler(this.btn_generer_Click);
             // 
-            // lbl_operation
+            // lbl_operation_init
             // 
-            this.lbl_operation.AutoSize = true;
-            this.lbl_operation.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_operation.Location = new System.Drawing.Point(23, 248);
-            this.lbl_operation.Name = "lbl_operation";
-            this.lbl_operation.Size = new System.Drawing.Size(156, 20);
-            this.lbl_operation.TabIndex = 6;
-            this.lbl_operation.Text = "Nombre d\'opération :";
+            this.lbl_operation_init.AutoSize = true;
+            this.lbl_operation_init.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_operation_init.Location = new System.Drawing.Point(23, 248);
+            this.lbl_operation_init.Name = "lbl_operation_init";
+            this.lbl_operation_init.Size = new System.Drawing.Size(243, 20);
+            this.lbl_operation_init.TabIndex = 6;
+            this.lbl_operation_init.Text = "Nombre d\'opération Initialisation :";
             // 
             // lbl_max
             // 
@@ -132,23 +133,13 @@ namespace TP1_INF1008
             this.txtBox_max.Size = new System.Drawing.Size(100, 26);
             this.txtBox_max.TabIndex = 10;
             // 
-            // printPreviewDialog1
-            // 
-            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
-            this.printPreviewDialog1.Enabled = true;
-            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
-            this.printPreviewDialog1.Name = "printPreviewDialog1";
-            this.printPreviewDialog1.Visible = false;
-            // 
             // label1
             // 
             this.label1.BackColor = System.Drawing.Color.Firebrick;
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(539, 9);
+            this.label1.Location = new System.Drawing.Point(539, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(36, 34);
             this.label1.TabIndex = 11;
@@ -156,16 +147,49 @@ namespace TP1_INF1008
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
+            // panelDraggable
+            // 
+            this.panelDraggable.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.panelDraggable.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelDraggable.Location = new System.Drawing.Point(0, 0);
+            this.panelDraggable.Name = "panelDraggable";
+            this.panelDraggable.Size = new System.Drawing.Size(587, 15);
+            this.panelDraggable.TabIndex = 12;
+            this.panelDraggable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PannelDraggable_MouseDown);
+            // 
+            // lbl_operation_prim
+            // 
+            this.lbl_operation_prim.AutoSize = true;
+            this.lbl_operation_prim.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_operation_prim.Location = new System.Drawing.Point(23, 278);
+            this.lbl_operation_prim.Name = "lbl_operation_prim";
+            this.lbl_operation_prim.Size = new System.Drawing.Size(191, 20);
+            this.lbl_operation_prim.TabIndex = 13;
+            this.lbl_operation_prim.Text = "Nombre d\'opération Prim :";
+            // 
+            // lbl_operation_total
+            // 
+            this.lbl_operation_total.AutoSize = true;
+            this.lbl_operation_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_operation_total.Location = new System.Drawing.Point(23, 310);
+            this.lbl_operation_total.Name = "lbl_operation_total";
+            this.lbl_operation_total.Size = new System.Drawing.Size(195, 20);
+            this.lbl_operation_total.TabIndex = 14;
+            this.lbl_operation_total.Text = "Nombre d\'opération Total :";
+            // 
             // Labyrinthe
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(587, 289);
+            this.ClientSize = new System.Drawing.Size(587, 350);
+            this.Controls.Add(this.lbl_operation_total);
+            this.Controls.Add(this.lbl_operation_prim);
+            this.Controls.Add(this.panelDraggable);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtBox_max);
             this.Controls.Add(this.lbl_max);
-            this.Controls.Add(this.lbl_operation);
+            this.Controls.Add(this.lbl_operation_init);
             this.Controls.Add(this.btn_generer);
             this.Controls.Add(this.txtBox_Largeur);
             this.Controls.Add(this.txtBox_Longueur);
@@ -189,11 +213,13 @@ namespace TP1_INF1008
         private System.Windows.Forms.TextBox txtBox_Longueur;
         private System.Windows.Forms.TextBox txtBox_Largeur;
         private System.Windows.Forms.Button btn_generer;
-        private System.Windows.Forms.Label lbl_operation;
+        private System.Windows.Forms.Label lbl_operation_init;
         private System.Windows.Forms.Label lbl_max;
         private System.Windows.Forms.TextBox txtBox_max;
-        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panelDraggable;
+        private System.Windows.Forms.Label lbl_operation_prim;
+        private System.Windows.Forms.Label lbl_operation_total;
     }
 }
 

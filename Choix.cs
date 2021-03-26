@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using TP1_INF1008.Data;
-using TP1_INF1008.Model;
-using System.Threading;
-using static TP1_INF1008.Data.Map;
-using static TP1_INF1008.Model.Noeud;
+using static TP1_INF1008.Utils.Utils;
 
 /* Choix.cs  ***********************************************************************************************
  **********     @Authors :                                             Date : 01 Avril 2020       **********
@@ -18,6 +10,7 @@ using static TP1_INF1008.Model.Noeud;
  **********                 * Ismael Gansonre                                                     **********
  **********                 * Jordan Kuibia                                                       **********
  **********                 * Jonathan Kanyinda                                                   **********
+ **********                 * Edgard Koffi                                                        **********
  ***********************************************************************************************************/
 /*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
  * Choix.cs
@@ -30,13 +23,13 @@ namespace TP1_INF1008
 {
     public partial class Choix : Form
     {
+
         private Map map;
         private Labyrinthe labyrinthe = new Labyrinthe();
         private int MIN = 1;
         private int longueur;
         private int largeur;
         private int max;
-        private int nbOperationLabyrinthe = 0;
 
         public Choix()
         {
@@ -92,34 +85,31 @@ namespace TP1_INF1008
                     case 1:
                         map = CreationMapAleatoire();
                         labyrinthe.SetMap(map);
-                        nbOperationLabyrinthe += map.GetNbreOperation();
-                        Console.WriteLine($"Nombre d'opération : {nbOperationLabyrinthe}");
+                        Console.WriteLine($"Nombre d'opération Initialisation : {map.GetNbreOperation()}");
                         Console.WriteLine($"information dimension : {map}");
-
                         break;
 
                     case 2:
                         map = CreationMap();
                         labyrinthe.SetMap(map);
-                        nbOperationLabyrinthe += map.GetNbreOperation();
-                        Console.WriteLine($"Nombre d'opération : {nbOperationLabyrinthe}");
+                        Console.WriteLine($"Nombre d'opération : {map.GetNbreOperation()}");
                         Console.WriteLine($"information dimension : {map}");
-
                         break;
 
                     case 3:
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("\n\t\t\t===  Lancer l'algorithme de Prim  ===");
+                        Console.WriteLine("\n\t\t\t===\tLancer l'algorithme de Prim     ===");
                         Console.WriteLine("\n\t\t\t\tPrim en cours d'exécution...");
-                        Console.ResetColor();
-                        Thread.Sleep(1000);
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("\n\t\t\t===  Lancement l'algorithme de Prim réussi  ===");
                         Console.ResetColor();
                         // execution de l'algorithme de Prim
                         labyrinthe.Prim();
+                        Thread.Sleep(500);
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\n\t\t\t===  Lancement l'algorithme de Prim réussi  ===");
+                        Console.WriteLine($"\n\t\t\t===\tNombre Opération Prim : {labyrinthe.GetNbreOperationPrim()}       ===");
+                        Console.ResetColor();
                         Console.WriteLine("\n");
                         break;
 
@@ -161,6 +151,10 @@ namespace TP1_INF1008
 
             AskInfoMap();
 
+            Console.WriteLine(" Entrer le poids maximum");
+            max = Convert.ToInt32(Console.ReadLine());
+            map = new Map(longueur, largeur);
+
             if (max <= MIN)
             {
                 Console.BackgroundColor = ConsoleColor.Black;
@@ -173,34 +167,54 @@ namespace TP1_INF1008
             return map.PoidsAleatoires(MIN, max);
         }
 
-
+        /**
+        * CreationMap : Methode permettant de créer d'initialiser une map à l'aide des informations reçu de l'Utilisateur
+        * C'est à L'Utilisateur de donner le poids pour chacune de Liaison
+        * @param longueur : La longueur du Labyrinthe
+        * @param largeur : La Largueur du Labyrinthe
+        * @param max : Le poid maximum entre les Cases
+        */
         private Map CreationMap()
         {
+            int poids_Droite;
+            int poids_Bas;
             AskInfoMap();
-
-            if (max <= MIN)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Entrer un poids positif");
-                Console.ResetColor();
-                return null;
-            }
 
             for (int i = 0; i < longueur * largeur; i++)
             {
+                do
+                {
+                    Console.WriteLine("Entrer la poids pour map[{0}]- vers droite : ", i);
+                    poids_Droite = Convert.ToInt32(Console.ReadLine());
 
-                Console.WriteLine("Entrer la poids pour map[{0}]- voisin droite : ", i);
-                int poids_Droite = Convert.ToInt32(Console.ReadLine());
+                    if (poids_Droite <= 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Entrer un poids positif (Superieur à 0)");
+                        Console.ResetColor();
+                    }
+                } while (poids_Droite <= 0);
+
+                do
+                {
+                    Console.WriteLine("Entrer la poids pour map[{0}] - vers Bas : ", i);
+                    poids_Bas = Convert.ToInt32(Console.ReadLine());
+                    if (poids_Bas <= 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Entrer un poids positif (Superieur à 0)");
+                        Console.ResetColor();
+                    }
+                } while (poids_Bas <= 0);
+
+                // Affectactions des Poids dans la Map
                 map.AffectationPoids(i, poids_Droite, true);
-
-                Console.WriteLine("Entrer la poids pour map[{0}] - voisin Bas : ", i);
-                int poids_Bas = Convert.ToInt32(Console.ReadLine());
                 map.AffectationPoids(i, poids_Bas, false);
             }
 
             return map;
-
         }
 
 
@@ -220,15 +234,21 @@ namespace TP1_INF1008
 
             Console.WriteLine(" Entrer la largeur du Labyrinthe (Vertical)");
             largeur = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine(" Entrer le poids maximum");
-            max = Convert.ToInt32(Console.ReadLine());
-            map = new Map(longueur, largeur);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void PannelDraggable_MouseDown(object sender, MouseEventArgs e)
+        {
+            DragMe(Handle);
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            DragMe(Handle);
         }
     }
 }
