@@ -173,7 +173,6 @@ namespace TP1_INF1008
                 if (liaisonPossible.Count != 0)
                 {
                     // Recherche la prochaine liaison potentielle
-                    //liaisonTempo = liaisonPossible.OrderBy(x => this.CompareTo(x));
                     liaisonTempo = liaisonPossible.Min();
 
                     // on prend le noeud pas encore dans la solution
@@ -207,7 +206,7 @@ namespace TP1_INF1008
             Liaison[][] ecran = new Liaison[GetMap().GetLargeur * 2 - 1][];
             for (int y = 0; y < (GetMap().GetLargeur * 2) - 1; y++)
             {
-                ecran[y] = new Liaison[GetMap().GetLongueur * 2 - 1];
+                ecran[y] = new Liaison[(GetMap().GetLongueur * 2) - 1];
             }
 
             // parcourir les liaisons pour les ajouter dans le Tableau
@@ -220,9 +219,9 @@ namespace TP1_INF1008
                 ecran[tmp_y][tmp_x] = tmp;
             }
 
-            for (int y = 0; y < GetMap().GetLongueur * 2 - 1; y++)
+            for (int y = 0; y < GetMap().GetLargeur * 2 - 1; y++)
             {
-                for (int x = 0; x < GetMap().GetLargeur * 2 - 1; x++)
+                for (int x = 0; x < GetMap().GetLongueur * 2 - 1; x++)
                 {
 
                     if (x % 2 == 0 && y % 2 == 0)
@@ -363,7 +362,7 @@ namespace TP1_INF1008
                                 #region 000_
                                     (gauche ?
                                         "═" : // 0001 (Alt + 205)
-                                        " " // Impossible
+                                        "?" // Impossible
                                     )
                                 #endregion
 

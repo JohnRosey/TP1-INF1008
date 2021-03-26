@@ -143,7 +143,7 @@ namespace TP1_INF1008.Model
         public Liaison getLiaison(Direction direction)
         {
             siVoisinExiste(direction);
-            //Map map = labyrinthe.getMap();
+            //Map map = labyrinthe.GetMap();
 
             return new Liaison(this, GetNoeudVoisin(direction), GetPoidsLiaison(direction));
         }

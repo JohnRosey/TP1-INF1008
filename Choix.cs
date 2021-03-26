@@ -79,17 +79,18 @@ namespace TP1_INF1008
                 Console.ResetColor();
 
                 Console.WriteLine("\nVoici les Options disponibles :" +
-                  "\n\t1. Générer le Labyrinthe" +
-                  "\n\t2. Lancer l'algorithme de Prim" +
-                   "\n\t3. Afficher à la Console le Labyrinthe" +
-                   "\n\t4. Quitter\n");
+                  "\n\t1. Générer le Labyrinthe Aléatoire" +
+                  "\n\t2. Générer le Labyrinthe Manuellement" +
+                  "\n\t3. Lancer l'algorithme de Prim" +
+                   "\n\t4. Afficher à la Console le Labyrinthe" +
+                   "\n\t5. Quitter\n");
                 Console.Write("Selectionner l'Option : ");
                 menu = Convert.ToInt32(Console.ReadLine());
 
                 switch (menu)
                 {
                     case 1:
-                        map = CreationMap();
+                        map = CreationMapAleatoire();
                         labyrinthe.SetMap(map);
                         nbOperationLabyrinthe += map.GetNbreOperation();
                         Console.WriteLine($"Nombre d'opération : {nbOperationLabyrinthe}");
@@ -98,6 +99,15 @@ namespace TP1_INF1008
                         break;
 
                     case 2:
+                        map = CreationMap();
+                        labyrinthe.SetMap(map);
+                        nbOperationLabyrinthe += map.GetNbreOperation();
+                        Console.WriteLine($"Nombre d'opération : {nbOperationLabyrinthe}");
+                        Console.WriteLine($"information dimension : {map}");
+
+                        break;
+
+                    case 3:
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine("\n\t\t\t===  Lancer l'algorithme de Prim  ===");
@@ -113,7 +123,7 @@ namespace TP1_INF1008
                         Console.WriteLine("\n");
                         break;
 
-                    case 3:
+                    case 4:
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine("\n\t\t\t===  Afficher à la Console le Labyrinthe  ===");
@@ -121,7 +131,7 @@ namespace TP1_INF1008
                         Console.WriteLine(labyrinthe.AffichageLabyrinthe());
                         break;
 
-                    case 4:
+                    case 5:
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         flag = false;
@@ -139,32 +149,17 @@ namespace TP1_INF1008
 
         }
 
-        void Copyright()
-        {
-
-        }
 
         /**
-         * CeationMap : Methode permettant de créer une map à l'aide des informations reçu de l'Utilisateur
+         * CreationMapAleatoire : Methode permettant de créer une map à l'aide des informations reçu de l'Utilisateur
          * @param longueur : La longueur du Labyrinthe
          * @param largeur : La Largueur du Labyrinthe
          * @param max : Le poid maximum entre les Cases
          */
-        private Map CreationMap()
+        private Map CreationMapAleatoire()
         {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\n\t\t\t===  Génération du Labyrinthe  === ");
-            Console.ResetColor();
 
-            Console.WriteLine(" Entrer la longueur du Labyrinthe");
-            longueur = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine(" Entrer la largeur du Labyrinthe");
-            largeur = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine(" Entrer le poids maximum");
-            max = Convert.ToInt32(Console.ReadLine());
+            AskInfoMap();
 
             if (max <= MIN)
             {
@@ -175,8 +170,60 @@ namespace TP1_INF1008
                 return null;
             }
 
-            map = new Map(longueur, largeur);
             return map.PoidsAleatoires(MIN, max);
+        }
+
+
+        private Map CreationMap()
+        {
+            AskInfoMap();
+
+            if (max <= MIN)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Entrer un poids positif");
+                Console.ResetColor();
+                return null;
+            }
+
+            for (int i = 0; i < longueur * largeur; i++)
+            {
+
+                Console.WriteLine("Entrer la poids pour map[{0}]- voisin droite : ", i);
+                int poids_Droite = Convert.ToInt32(Console.ReadLine());
+                map.AffectationPoids(i, poids_Droite, true);
+
+                Console.WriteLine("Entrer la poids pour map[{0}] - voisin Bas : ", i);
+                int poids_Bas = Convert.ToInt32(Console.ReadLine());
+                map.AffectationPoids(i, poids_Bas, false);
+            }
+
+            return map;
+
+        }
+
+
+        /**
+         * Methode qui demande à l'Utilisateur les informations de la Map à générer
+         * Permet de recueillir les informations sur la Taille du Map
+         */
+        private void AskInfoMap()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("\n\t\t\t===  Génération du Labyrinthe  === ");
+            Console.ResetColor();
+
+            Console.WriteLine(" Entrer la longueur du Labyrinthe (Horizontal)");
+            longueur = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine(" Entrer la largeur du Labyrinthe (Vertical)");
+            largeur = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine(" Entrer le poids maximum");
+            max = Convert.ToInt32(Console.ReadLine());
+            map = new Map(longueur, largeur);
         }
 
         private void button3_Click(object sender, EventArgs e)

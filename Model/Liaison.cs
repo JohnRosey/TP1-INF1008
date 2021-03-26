@@ -67,6 +67,7 @@ namespace TP1_INF1008.Model
             set { poids = value; }
         }
 
+
         /**
          * Vérifier si la Liaison reçue en paramètre est pareille que l'instance
          * @return bool

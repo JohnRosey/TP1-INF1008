@@ -24,8 +24,8 @@ namespace TP1_INF1008.Data
         /**
         * Compteur d'operation
         */
-
         private static int nbOperationMap = 0;
+
         /**
         * Données brutes de liaison.
         * - Primière dimenssion :
@@ -53,7 +53,7 @@ namespace TP1_INF1008.Data
         /**
          * Crée une instance de la classe {@link Map} avec pour
          * dimension x (horizontale) {@code longueur} et
-         * y (verticale) {@code lageur}.
+         * y (verticale) {@code largeur}.
          *
          * @param longueur Longeur de la map.
          * @param largeur   Largeur de la map.
@@ -66,7 +66,7 @@ namespace TP1_INF1008.Data
             if (longueur <= 0 || largeur <= 0)
                 throw new ArgumentException("La longueur et la largeur de la carte doient être supérieur à zéro.");
 
-            map = new int[longueur * largeur,2];
+            map = new int[longueur * largeur, 2];
         }
 
         public int GetLongueur
@@ -133,9 +133,9 @@ namespace TP1_INF1008.Data
 
         /**
      * Met des valeurs aléatoires aux liaisons bornées entre {@code min} (inclue)
-     * et {@code max} (exclue).
-     * @param min Minimum des valeurs aléatoires (inclue).
-     * @param max Maximum des valeurs aléatoires (exclue).
+     * et {@code max}
+     * @param min Minimum des valeurs aléatoires
+     * @param max Maximum des valeurs aléatoires
      * @return Retourne cette instance de classe si besoin.
      */
         public Map PoidsAleatoires(int min, int max)
@@ -155,6 +155,17 @@ namespace TP1_INF1008.Data
         }
 
 
+        public void AffectationPoids(int x, int poids, bool toRigth) {
+            
+            if(toRigth)
+                map[x, 1] = poids;
+            else
+                map[x, 0] = poids;
+
+            nbOperationMap += 1;
+        }
+
+       
         /**
             * Cette fonction permet de d'obtenir la valeur de la liaison
             * {@code versLiaisonDroite} en fonction des coordonées d'une
@@ -181,7 +192,7 @@ namespace TP1_INF1008.Data
             if (!toRightDirection && !aUnVoisinDuBas(positionX, positionY))
                 throw new ArgumentOutOfRangeException("Cette case n'a pas de voisin du Bas.");
 
-            return map[positionX + positionY * longueur, toRightDirection ? 0 : 1];
+            return map[positionX + positionY * longueur, toRightDirection ? 1 : 0];
         }
 
         public int GetNbreOperation()
