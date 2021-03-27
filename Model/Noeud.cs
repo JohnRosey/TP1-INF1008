@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TP1_INF1008.Data;
 /* Noeud.cs  ***********************************************************************************************
  **********     @Authors :                                             Date : 01 Avril 2020       **********
@@ -101,6 +100,10 @@ namespace TP1_INF1008.Model
             GAUCHE = 3,
         }
 
+        /**
+         * Classe interne à Noeud permettant à celle-ci d'être Enumerable
+         * possiblité de l'Utiliser avec un foreach
+         */
         public static class EnumDirection
         {
             public static IEnumerable<Direction> GetValues<Direction>()

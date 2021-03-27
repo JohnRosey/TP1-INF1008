@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using TP1_INF1008.Data;
@@ -74,9 +75,10 @@ namespace TP1_INF1008
                 Console.WriteLine("\nVoici les Options disponibles :" +
                   "\n\t1. Générer le Labyrinthe Aléatoire" +
                   "\n\t2. Générer le Labyrinthe Manuellement" +
-                  "\n\t3. Lancer l'algorithme de Prim" +
-                   "\n\t4. Afficher à la Console le Labyrinthe" +
-                   "\n\t5. Quitter\n");
+                  "\n\t3. Générer le Labyrinthe Avec les données de l'Enoncée" +
+                  "\n\t4. Lancer l'algorithme de Prim" +
+                   "\n\t5. Afficher à la Console le Labyrinthe" +
+                   "\n\t6. Quitter\n");
                 Console.Write("Selectionner l'Option : ");
                 menu = Convert.ToInt32(Console.ReadLine());
 
@@ -85,43 +87,34 @@ namespace TP1_INF1008
                     case 1:
                         map = CreationMapAleatoire();
                         labyrinthe.SetMap(map);
-                        Console.WriteLine($"Nombre d'opération Initialisation : {map.GetNbreOperation()}");
+                        Console.WriteLine($"Nombre d'opération Initialisation : {map.NbreOperation}");
                         Console.WriteLine($"information dimension : {map}");
                         break;
 
                     case 2:
                         map = CreationMap();
                         labyrinthe.SetMap(map);
-                        Console.WriteLine($"Nombre d'opération : {map.GetNbreOperation()}");
+                        Console.WriteLine($"Nombre d'opération : {map.NbreOperation}");
                         Console.WriteLine($"information dimension : {map}");
                         break;
 
                     case 3:
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("\n\t\t\t===\tLancer l'algorithme de Prim     ===");
-                        Console.WriteLine("\n\t\t\t\tPrim en cours d'exécution...");
-                        Console.ResetColor();
-                        // execution de l'algorithme de Prim
-                        labyrinthe.Prim();
-                        Thread.Sleep(500);
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("\n\t\t\t===  Lancement l'algorithme de Prim réussi  ===");
-                        Console.WriteLine($"\n\t\t\t===\tNombre Opération Prim : {labyrinthe.GetNbreOperationPrim()}       ===");
-                        Console.ResetColor();
-                        Console.WriteLine("\n");
+                        map = PreRemplissage();
+                        labyrinthe.SetMap(map);
+                        Console.WriteLine($"Nombre d'opération : {map.NbreOperation}");
+                        Console.WriteLine($"information dimension : {map}");
                         break;
 
                     case 4:
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("\n\t\t\t===  Afficher à la Console le Labyrinthe  ===");
-                        Console.ResetColor();
-                        Console.WriteLine(labyrinthe.AffichageLabyrinthe());
+                        RunAlgoPrim();
                         break;
 
                     case 5:
+                        RunAffichageLabyrinthe();
+                        ReinitialisationCompteur(); // Réinitialisation compteurs après Affichage
+                        break;
+
+                    case 6:
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         flag = false;
@@ -137,6 +130,107 @@ namespace TP1_INF1008
                 }
             }
 
+        }
+
+
+        /**
+         * Methode qui permet de Réinitialiser les compteurs 
+         */
+        private void ReinitialisationCompteur()
+        {
+            map.NbreOperation = 0;
+            labyrinthe.CoupPinceau = 0;
+        }
+
+
+        /**
+        * Methode qui demande le démarrage de l'affichage du labyrinthe
+        * Verifie si la map a été au préalale initialiser et que l'algorithme de Prim a été lancé
+        */
+        private void RunAffichageLabyrinthe()
+        {
+            if (map != null && labyrinthe.LiaisonFinale != null)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("\n\t\t\t===  Afficher à la Console le Labyrinthe  ===");
+                Console.ResetColor();
+                Console.WriteLine(labyrinthe.AffichageLabyrinthe());
+                SaveToFile();
+            }
+            else if (map != null && labyrinthe.LiaisonFinale == null)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\tCommencer par Lancer l'algorithme de PRIM !");
+                Console.ResetColor();
+                Console.WriteLine("\n");
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\tCommencer par Initialiser votre Labyrinthe (option 1, 2 ou 3)");
+                Console.ResetColor();
+                Console.WriteLine("\n");
+            }
+
+        }
+
+
+        /**
+         * Methode qui demande le démarrage de l'Algorithme de Prim
+         * Verifie si la map a été au préalale initialiser avant de pouvoir lancer l'algorithme
+         */
+        private void RunAlgoPrim()
+        {
+            if(map != null)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("\n\t\t\t===\tLancer l'algorithme de Prim     ===");
+                Console.WriteLine("\n\t\t\t\tPrim en cours d'exécution...");
+                Console.ResetColor();
+                // execution de l'algorithme de Prim
+                labyrinthe.Prim();
+                Thread.Sleep(500);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n\t\t\t===  Lancement l'algorithme de Prim réussi  ===");
+                Console.WriteLine($"\n\t\t\t===\tNombre Opération Prim : {labyrinthe.GetNbreOperationPrim()}\t===");
+                Console.ResetColor();
+                Console.WriteLine("\n");
+                
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("\tCommencer par Initialiser votre Labyrinthe (option 1, 2 ou 3)");
+                Console.ResetColor();
+                Console.WriteLine("\n");
+            }
+           
+        }
+
+        /**
+         * Methode qui permet de sauvergarder les données de calcul et le Labyrinthe dans un fichier .txt 
+         * depuis la Console 
+         */
+        private void SaveToFile()
+        {
+            // Écrire dans le fichier "LabyrintheDessin.txt"
+            File.WriteAllText(adresseLabyrinthe,
+                $"\n\t\tLabyrinthe\n\t\t----------\n" +
+                $"\n{labyrinthe.AffichageLabyrinthe()}");
+
+            // Écrire dans le fichier "LabyrintheCalcul.txt"
+            File.WriteAllText(adresseCalcul,
+                $"information dimension : {map}\n" +
+                $"Nombre d'opération Initialisation : {map.NbreOperation}\n" +
+                $"Nombre d'opération Prim : {labyrinthe.GetNbreOperationPrim()}\n" +
+                $"Coup de Pinceau : {labyrinthe.CoupPinceau}\n"+
+                $"Nombre d'opération Total : {labyrinthe.GetNbreOperationPrim() + map.NbreOperation + labyrinthe.CoupPinceau}");
         }
 
 
@@ -236,16 +330,89 @@ namespace TP1_INF1008
             largeur = Convert.ToInt32(Console.ReadLine());
         }
 
+
+        /**
+         * Methode qui permet de remplir la map avec les données fourni sur l'Énoncée du travail
+         * @return Map
+         */
+        public Map PreRemplissage() {
+
+            // initialisation de la map
+            map = new Map(6, 4);
+
+            // Remplissage des poids
+            map.AffectationPoids(0, 5, true);
+            map.AffectationPoids(0, 2, false);
+            map.AffectationPoids(1, 4, true);
+            map.AffectationPoids(1, 3, false);
+            map.AffectationPoids(2, 5, true);
+            map.AffectationPoids(2, 8, false);
+            map.AffectationPoids(3, 10, true);
+            map.AffectationPoids(3, 1, false);
+            map.AffectationPoids(4, 7, true);
+            map.AffectationPoids(4, 3, false);
+            map.AffectationPoids(5, 0, true);
+            map.AffectationPoids(5, 4, false);
+
+            map.AffectationPoids(6, 3, true);
+            map.AffectationPoids(6, 4, false);
+            map.AffectationPoids(7, 8, true);
+            map.AffectationPoids(7, 9, false);
+            map.AffectationPoids(8, 2, true);
+            map.AffectationPoids(8, 4, false);
+            map.AffectationPoids(9, 1, true);
+            map.AffectationPoids(9, 7, false);
+            map.AffectationPoids(10, 5, true);
+            map.AffectationPoids(10, 2, false);
+            map.AffectationPoids(11, 0, true);
+            map.AffectationPoids(11, 3, false);
+
+            map.AffectationPoids(12, 2, true);
+            map.AffectationPoids(12, 2, false);
+            map.AffectationPoids(13, 8, true);
+            map.AffectationPoids(13, 1, false);
+            map.AffectationPoids(14, 6, true);
+            map.AffectationPoids(14, 9, false);
+            map.AffectationPoids(15, 2, true);
+            map.AffectationPoids(15, 10, false);
+            map.AffectationPoids(16, 3, true);
+            map.AffectationPoids(16, 6, false);
+            map.AffectationPoids(17, 0, true);
+            map.AffectationPoids(17, 7, false);
+
+            map.AffectationPoids(18, 8, true);
+            map.AffectationPoids(18, 0, false);
+            map.AffectationPoids(19, 9, true);
+            map.AffectationPoids(19, 0, false);
+            map.AffectationPoids(20, 3, true);
+            map.AffectationPoids(20, 0, false);
+            map.AffectationPoids(21, 4, true);
+            map.AffectationPoids(21, 0, false);
+            map.AffectationPoids(22, 5, true);
+            map.AffectationPoids(22, 0, false);
+            map.AffectationPoids(23, 0, true);
+            map.AffectationPoids(23, 0, false);
+
+            return map;
+        }
+
+
         private void button3_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        /**
+         * Permet à la Fenetre de se deplacer (Draggable)
+         */
         private void PannelDraggable_MouseDown(object sender, MouseEventArgs e)
         {
             DragMe(Handle);
         }
 
+        /**
+         * Permet à la Fenetre de se deplacer (Draggable)
+         */
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
             DragMe(Handle);

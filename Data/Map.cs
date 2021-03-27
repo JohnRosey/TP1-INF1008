@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /* Map.cs  *************************************************************************************************
  **********     @Authors :                                             Date : 01 Avril 2020       **********
@@ -23,17 +20,17 @@ namespace TP1_INF1008.Data
     public partial class Map
     {
         /**
-        * Compteur d'operation
+        * Compteur d'operation d'initialisation Map
         */
         private static int nbOperationMap = 0;
 
         /**
         * Données brutes de liaison.
-        * - Primière dimenssion :
+        * - Première dimenssion :
         * Chaque noeud de gauche à droite puis de haut en bas
         * - Seconde dimension :
-        * [0] -> valeur de la liaison vers le voisin de gauche
-        * [1] -> valeur de la liaison vers le voisin du bas
+        * [0] -> valeur de la liaison vers le voisin de bas
+        * [1] -> valeur de la liaison vers le voisin de droite
         * Valeur indéterminée si aucun
         */
         private int[,] map;
@@ -116,15 +113,15 @@ namespace TP1_INF1008.Data
             return x < longueur - 1;
         }
 
-     /**
-     * Retourne vrai si la case de coordonées {@code x} et {@code y}
-     * à un voisin du bas.
-     *
-     * @param x Coordonnées x (horizontale) de la case à vérifier.
-     * @param y Coordonnées y (verticale) de la case à vérifier.
-     * @return Vrai si la case à un voisin du bas.
-     * @throws IllegalArgumentException Si au moins une des coordonées x ou y est invalide.
-     */
+        /**
+        * Retourne vrai si la case de coordonées {@code x} et {@code y}
+        * à un voisin du bas.
+        *
+        * @param x Coordonnées x (horizontale) de la case à vérifier.
+        * @param y Coordonnées y (verticale) de la case à vérifier.
+        * @return Vrai si la case à un voisin du bas.
+        * @throws IllegalArgumentException Si au moins une des coordonées x ou y est invalide.
+        */
         private bool aUnVoisinDuBas(int x, int y)
         {
             isValideXY(x, y);
@@ -132,39 +129,48 @@ namespace TP1_INF1008.Data
         }
 
 
-        /**
+     /**
      * Met des valeurs aléatoires aux liaisons bornées entre {@code min} (inclue)
      * et {@code max}
-     * @param min Minimum des valeurs aléatoires
-     * @param max Maximum des valeurs aléatoires
-     * @return Retourne cette instance de classe si besoin.
+     * @param min Minimum des Poids aléatoires
+     * @param max Maximum des Poids aléatoires
+     * @return Map
      */
         public Map PoidsAleatoires(int min, int max)
         {
             nbOperationMap = 0;
-            // x et y sont des coordonées en niveau du tableau map
+            // x et y sont des coordonées au niveau du tableau map
             int x, y;
             Random rand = new Random();
             for (x = 0; x < longueur * largeur; x++)
             {
                 for (y = 0; y < 2; y++)
                 {
-                    map[x,y] = rand.Next(min, max) + 1;
+                    map[x, y] = rand.Next(min, max) + 1;
                     nbOperationMap += 1;
                 }
             }
             return this;
         }
 
+        /**
+         * Methode qui permet d'affecter les poids Manuellement (non aléatoire)
+         * en deux directions (toRight = DROITE) et (!toRight = GAUCHE)
+         */
+        public void AffectationPoids(int x, int poids, bool toRight) {
 
-        public void AffectationPoids(int x, int poids, bool toRigth) {
-            
-            if(toRigth)
+            if (toRight)
                 map[x, 1] = poids;
             else
                 map[x, 0] = poids;
 
             nbOperationMap += 1;
+        }
+
+        // Getter et setter du nombre d'opération effectuée dans la Map (Initialisation)
+        public int NbreOperation{
+            get { return nbOperationMap; }
+            set { nbOperationMap = value; }
         }
 
        
@@ -195,11 +201,6 @@ namespace TP1_INF1008.Data
                 throw new ArgumentOutOfRangeException("Cette case n'a pas de voisin du Bas.");
 
             return map[positionX + positionY * longueur, toRightDirection ? 1 : 0];
-        }
-
-        public int GetNbreOperation()
-        {
-            return nbOperationMap;
         }
 
         public override string ToString()

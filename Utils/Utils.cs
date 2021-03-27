@@ -12,8 +12,10 @@ using System.Text;
  ***********************************************************************************************************/
 namespace TP1_INF1008.Utils
 {
-    class Utils
+    static class Utils
     {
+        public static readonly string adresseLabyrinthe = "..\\..\\LabyrintheDessin.txt";
+        public static readonly string adresseCalcul = "..\\..\\LabyrintheCalcul.txt";
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
 

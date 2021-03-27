@@ -33,8 +33,6 @@ namespace TP1_INF1008
     {
 
         private Map map;
-        private static readonly string adresseLabyrinthe = "..\\..\\LabyrintheDessin.txt";
-        private static readonly string adresseCalcul = "..\\..\\LabyrintheCalcul.txt";
         private int largeur;
         private int longueur;
         private static readonly int MIN = 1;
@@ -42,16 +40,31 @@ namespace TP1_INF1008
         public static Labyrinthe UserInterface;
         private static int nbOperationLabyrinthe;
         private HashSet<Liaison> liaisonsFinales = null;
+        private int coupPinceau = 0;
 
         public Labyrinthe()
         {
             InitializeComponent();
             UserInterface = this;
         }
-       
 
-    /* Methode qui permet d'aller chercher un Noeud sur la Map */
-    public Noeud GetNoeud(int posX, int posY)
+
+        //Getter de la Solution Finale
+        public HashSet<Liaison> LiaisonFinale
+        {
+            get { return liaisonsFinales; }
+        }
+
+        // Getter du nombre de coup de pinceau
+        public int CoupPinceau
+        {
+            get { return coupPinceau; }
+            set { coupPinceau = 0; }
+        }
+
+
+        /* Methode qui permet d'aller chercher un Noeud sur la Map */
+        public Noeud GetNoeud(int posX, int posY)
         {
             map.isValideXY(posX, posY);
             return new Noeud(this, posX, posY);
@@ -63,14 +76,15 @@ namespace TP1_INF1008
             return map;
         }
 
-         public void   SetMap(Map newMap){
+        public void SetMap(Map newMap)
+        {
             this.map = newMap;
         }
-    
+
         /**
          * Sauvegarde sous un format visuel le labyrunthe avec comme mur, les liaisons données.
          */
-        public void SaveToFile()
+        private void SaveToFile()
         {
             // Écrire dans le fichier "LabyrintheDessin.txt"
             File.WriteAllText(adresseLabyrinthe,
@@ -78,8 +92,12 @@ namespace TP1_INF1008
                 $"\n{AffichageLabyrinthe()}");
 
             // Écrire dans le fichier "LabyrintheCalcul.txt"
-            File.WriteAllText(adresseCalcul, 
-                $"{lbl_infoDimension.Text}\n{lbl_operation_init.Text}\n{lbl_operation_prim.Text}\n{lbl_operation_total.Text}");
+            File.WriteAllText(adresseCalcul,
+                $"{lbl_infoDimension.Text}\n" +
+                $"{lbl_operation_init.Text}\n" +
+                $"{lbl_operation_prim.Text}\n" +
+                $"{lbl_coup_pinceau.Text}\n" +
+                $"{lbl_operation_total.Text}");
         }
 
 
@@ -97,24 +115,32 @@ namespace TP1_INF1008
             // initialisation map
             map = new Map(longueur, largeur);
 
+            // Réinitialiser les compteurs d'initialisation
+            map.NbreOperation = 0;
+
             // Affectaction des poids aléatoires
             map.PoidsAleatoires(MIN, max);
-            int nbOperationInitialisation = map.GetNbreOperation();
+
+            int nbOperationInitialisation = map.NbreOperation;
 
             // Lancement de la methode de Prim()
             Prim();
 
-            // informations de calcul
-            lbl_operation_init.Text = $"Nombre d'opération Initialisation : {nbOperationInitialisation}";
-            lbl_operation_prim.Text = $"Nombre d'opération Prim : {nbOperationLabyrinthe}";
-            lbl_operation_total.Text = $"Nombre d'opération Total : {nbOperationLabyrinthe + nbOperationInitialisation}";
-            lbl_infoDimension.Text = $"information dimension : {map}";
+            // Réinitialiser le coup de Pinceau
+            coupPinceau = 0;
 
             // Affichage de resultat sur la console
             Console.WriteLine(AffichageLabyrinthe());
 
+            // informations de calcul
+            lbl_operation_init.Text = $"Nombre d'opération Initialisation : {nbOperationInitialisation}";
+            lbl_operation_prim.Text = $"Nombre d'opération Prim : {nbOperationLabyrinthe}";
+            lbl_operation_total.Text = $"Nombre d'opération Total : {nbOperationLabyrinthe + nbOperationInitialisation + coupPinceau}";
+            lbl_coup_pinceau.Text = $"Coup de Pinceau : {coupPinceau}";
+            lbl_infoDimension.Text = $"information dimension : {map}";
+
             // Enregistrement des resultats (labyrinthe et calcul sur les fichiers destinés)
-            SaveToFile();            
+            SaveToFile();
         }
 
 
@@ -137,7 +163,6 @@ namespace TP1_INF1008
             {
                 noeudFinale.Add(noeudToAdd);
 
-                // on ajoute les voisins de la case ajouté dans les liaisons possible
                 var values = EnumDirection.GetValues<Direction>();
 
                 Liaison liaisonTempo;
@@ -172,7 +197,7 @@ namespace TP1_INF1008
                     nbOperationLabyrinthe += 1;
                 }
 
-                
+
                 // S'il y a encore des liaisons possibles
                 if (liaisonPossible.Count != 0)
                 {
@@ -203,7 +228,7 @@ namespace TP1_INF1008
                 MessageBox.Show("Commencer par Lancer l'algorithme de PRIM !");
                 return null;
             }
-                
+
 
             StringBuilder str = new StringBuilder();
 
@@ -263,6 +288,8 @@ namespace TP1_INF1008
                         str.Append("■");
                     }
                     str.Append(" ");
+
+                    coupPinceau++;
                 }
                 str.Append("\n");
             }
@@ -278,7 +305,7 @@ namespace TP1_INF1008
         {
             try
             {
-                return table[y][x] != null; 
+                return table[y][x] != null;
             }
             catch (Exception)
             {
@@ -292,91 +319,91 @@ namespace TP1_INF1008
         private string ProduireDirectionLiaison(bool haut, bool droite, bool bas, bool gauche)
         {
             // 1___
-            if (haut) 
+            if (haut)
             {
-                return 
+                return
                     droite ?
-                        #region 11__
+                #region 11__
                             (bas ?
 
-                                #region 111_
+                #region 111_
                                     (gauche ?
                                         "╬" : // 1111 (Alt + 206)
                                         "╠" // 1110 (Alt + 204)
                                     ) :
-                                #endregion
+                #endregion
 
-                                #region 110_
+                #region 110_
                                     (gauche ?
                                         "╩" : // 1101 (Alt + 202)
                                         "╚" // 1100 (Alt + 200)
-                                    ) 
-                                #endregion
+                                    )
+                #endregion
                             ) :
-                        #endregion
+                #endregion
 
-                        #region 10__
+                #region 10__
                             (bas ?
 
-                                #region 101_
+                #region 101_
                                     (gauche ?
                                         "╣" : // 1011(Alt + 185)
                                         "║" // 1010(Alt + 186)
                                     ) :
-                                #endregion
+                #endregion
 
-                                #region 100_
+                #region 100_
                                     (gauche ?
                                         "╝" : // 1001 (Alt + 188)
                                         "║" // 1000 (Alt + 186)
-                                    ) 
-                                #endregion
+                                    )
+                #endregion
 
-                            ); 
-                        #endregion
+                            );
+                #endregion
             }
             else
             {
                 return
                     droite ?
-                        #region 01__
+                #region 01__
                             (bas ?
 
-                                #region 011_
+                #region 011_
                                     (gauche ?
                                         "╦" : // 0111 (Alt + 203)
                                         "╔" // 0110 (Alt + 201)
                                     ) :
-                                #endregion
+                #endregion
 
-                                #region 010_
+                #region 010_
                                     (gauche ?
                                         "═" : // 0101 (Alt + 205)
                                         "═" // 0100 (Alt + 205) //TODO : doute
                                     )
-                                #endregion
+                #endregion
                             ) :
-                        #endregion
+                #endregion
 
-                        #region 00__
+                #region 00__
                             (bas ?
 
-                                #region 001_
+                #region 001_
                                     (gauche ?
                                         "╗" : // 0011(Alt + 187)
                                         "║" // 0010(Alt + 186)
                                     ) :
-                                #endregion
+                #endregion
 
-                                #region 000_
+                #region 000_
                                     (gauche ?
                                         "═" : // 0001 (Alt + 205)
                                         "?" // Impossible
                                     )
-                                #endregion
+                #endregion
 
                             );
-                        #endregion
+                #endregion
             }
         }
 
