@@ -1,7 +1,7 @@
 ﻿
 namespace TP1_INF1008
 {
-    partial class Choix
+    partial class Accueil
     {
         /// <summary>
         /// Required designer variable.
@@ -149,7 +149,7 @@ namespace TP1_INF1008
             this.panelDraggable.TabIndex = 7;
             this.panelDraggable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PannelDraggable_MouseDown);
             // 
-            // Choix
+            // Accueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -160,9 +160,9 @@ namespace TP1_INF1008
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "Choix";
+            this.Name = "Accueil";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Choix";
+            this.Text = "Accueil";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

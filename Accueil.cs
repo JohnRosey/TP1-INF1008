@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using TP1_INF1008.Data;
 using static TP1_INF1008.Utils.Utils;
 
-/* Choix.cs  ***********************************************************************************************
+/* Accueil.cs  ***********************************************************************************************
  **********     @Authors :                                             Date : 01 Avril 2020       **********
  **********                 * Josue Lubaki                                                        **********
  **********                 * Ismael Gansonre                                                     **********
@@ -14,7 +14,7 @@ using static TP1_INF1008.Utils.Utils;
  **********                 * Edgard Koffi                                                        **********
  ***********************************************************************************************************/
 /*░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
- * Choix.cs
+ * Accueil.cs
  * ========
  *      Cette Classe Permet l'interactivité avec les Utilisateurs via le Menu
  *      
@@ -22,7 +22,7 @@ using static TP1_INF1008.Utils.Utils;
 
 namespace TP1_INF1008
 {
-    public partial class Choix : Form
+    public partial class Accueil : Form
     {
 
         private Map map;
@@ -32,7 +32,7 @@ namespace TP1_INF1008
         private int largeur;
         private int max;
 
-        public Choix()
+        public Accueil()
         {
             InitializeComponent();
         }

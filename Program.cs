@@ -23,7 +23,7 @@ namespace TP1_INF1008
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Choix());
+            Application.Run(new Accueil());
            
         }
        

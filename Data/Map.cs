@@ -155,7 +155,7 @@ namespace TP1_INF1008.Data
 
         /**
          * Methode qui permet d'affecter les poids Manuellement (non aléatoire)
-         * en deux directions (toRight = DROITE) et (!toRight = GAUCHE)
+         * en deux directions (toRight = DROITE) et (!toRight = BAS)
          */
         public void AffectationPoids(int x, int poids, bool toRight) {
 
