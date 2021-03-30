@@ -1,5 +1,5 @@
-information dimension : La map fait une taille de 6 X 4
-Nombre d'opération Initialisation : 120
-Nombre d'opération Prim : 96
-Coup de Pinceau : 154
-Nombre d'opération Total : 370
+information dimension : La map fait une taille de 25 X 25
+Nombre d'opération Initialisation : 1250
+Nombre d'opération Prim : 2500
+Coup de Pinceau : 2401
+Nombre d'opération Total : 6151
